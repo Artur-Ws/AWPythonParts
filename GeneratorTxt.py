@@ -211,17 +211,29 @@ class GetObjectAttributesInteractor():
         # name and extension of the file
         fileName = 'ExampleFileName.txt'
         fullName = os.path.join(savePath, fileName)
-        workFile = open(fullName, "a")
-
+        workFile = open(fullName, "a", errors="ignore")
+        attributeList = []
         for id, value in attributes:
 
-            # TUTAJ !!!!!!!!
-            temporaryAttr = str(AllplanBaseElements.AttributeDataManager.GetAttributeName(id) + "(" + str(id) + "): " + str(value) + "/n")
-            workFile.write(temporaryAttr)
+# TUTAJ !!!!!!!!
+            temporaryAttr = str(AllplanBaseElements.AttributeDataManager.GetAttributeName(id) + "(" + str(id) + "): " + str(value) + "\n")
+            attributeList.append(temporaryAttr)
+            print("####### START #######")
+            print(temporaryAttr)
+            print("####### STOP #######")
+
+            #workFile.write(temporaryAttr)
             TraceService.trace_1(AllplanBaseElements.AttributeDataManager.GetAttributeName(id) + "(" + str(id) + "): " + str(value))
 
-        print()
+        attributeString = ''.join(attributeList)
+        print(attributeString)
+        print("\n--------------------------\n")
+        print(type(attributeString))
+        print(attributeString.encode())
+        print("\n--------------------------\n")
 
+        #print()
+        workFile.write(str(attributeString))
         workFile.close()
 
         print(fullName)

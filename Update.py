@@ -1,5 +1,4 @@
 import os
-<<<<<<< HEAD
 import tkinter
 import NemAll_Python_BaseElements as AllplanBaseElements
 import NemAll_Python_IFW_ElementAdapter as AllplanElementAdapter
@@ -42,7 +41,6 @@ class Update:
     def copyFiles(self):
 
         self.checkDirectory()
-=======
 
 sourcePath = "\\ALPLAN\\alplan\\AWPythonPartsCopySource"
 targetPath = "C:\\ProgramData\\Nemetschek\\Allplan\\2021\\Etc\\PythonPartsScripts\\ToolsAndStartExamples"
@@ -57,16 +55,10 @@ class UpdatePP:
 
         for item in os.listdir()
 
-
->>>>>>> 40a000a6c6b872bd0acf0f47a4d35311b5463fb8
-
         window = tkinter.Tk()
         window.title("PBX PP Update")
         info = tkinter.Label(window, text='Pomyślnie zaktualizowano PythonPartsy')
         info.grid(column=0, row=0)
         window.mainloop()
 
-<<<<<<< HEAD
 Update.copyFiles()
-=======
->>>>>>> 40a000a6c6b872bd0acf0f47a4d35311b5463fb8

@@ -231,6 +231,8 @@ class GetObjectAttributesInteractor():
         print(type(attributeString))
         print(attributeString.encode())
         print("\n--------------------------\n")
+        print(attributeString)
+        print("\n--------------------------\n")
 
         #print()
         workFile.write(str(attributeString))

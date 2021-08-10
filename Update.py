@@ -1,10 +1,6 @@
 import os
 import tkinter
-import NemAll_Python_BaseElements as AllplanBaseElements
-import NemAll_Python_IFW_ElementAdapter as AllplanElementAdapter
-import NemAll_Python_IFW_Input as AllplanIFW
-import NemAll_Python_Geometry as AllplanGeo
-import NemAll_Python_BasisElements as AllplanBasisElements
+
 
 #sourcePath = "\\ALPLAN\\alplan\\AWPythonPartsCopySource"
 sourcePath = "C:\\ProgramData\\Nemetschek\\Allplan\\2021\\Etc\\PythonPartsScripts\\AWPythonParts"
@@ -15,11 +11,12 @@ def check_allplan_version(build_ele, version):
     return True
 
 def create_element(build_ele, doc):
-
+    model_elem_list = []
+    handle_list = []
     del build_ele
     del doc
 
-    return (list(), list())
+    return (model_elem_list, handle_list)
 
 print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 

@@ -318,6 +318,23 @@ class GetObjectAttributesInteractor():
                 print("Type description: ", AllplanElementAdapter.PrecastPropertiesService.GetPrecastElementTypeDescription(wall_child))
                 print()
 
+    def search_attribute(self, attribute_number):
+        source_path = os.environ['USERPROFILE'] + '\\desktop\\PythonParts\\ATTRIBUTES\\ExampleFileName.txt'
+        txt_file = open(source_path, 'rt')
+        attribute_to_search = '(' + str(attribute_number) + '): '
+        attribute_value = ''
+        for line in txt_file:
+            if attribute_to_search in line:
+                index1 = line.find(attribute_to_search)  # index of first "(" symbol of attribute_to_search
+                length_of_attribute_number = len(attribute_to_search)
+                index2 = index1 + length_of_attribute_number
+                attribute_value = line[index2:-1]
+                return attribute_value
+
+        if attribute_value == '':
+            return attribute_value
+
+
     def PrintToTxt(self):
         # Get userprofile path (ex. C:\Users\Example_Username\)
         userProfile = os.environ['USERPROFILE']
@@ -336,32 +353,32 @@ class GetObjectAttributesInteractor():
 
         # -------------------------------------------------------------------------------------
 
-        arg1 = '1'  # E  # Nazwa rysunku
-        arg2 = '2'  # G  # Numer ryunku
-        arg3 = '3'  # H  # Data utworzenia rysunku
-        arg4 = '4'  # I  # Ostatnia Rewizja
-        arg5 = '5'  # J  # Data ostatniej rewizji
-        arg6 = '6'  # M  # Ilość sztuk danego elementu
-        arg7 = '7'  # N  # Objtość elementu netto
-        arg8 = '8'  # AI # Klasa betonu
-        arg9 = '9'  # AH # Minimalna wytrzymałość betonu przy rozformowaniu
-        arg10 = '10'  # R  # Stal zbrojeniowa - masa zbrojenia [kg]
-        arg11 = '11'  # X  # Stal sprężająca - dół / ILOŚĆ strun w dolnej części elementu
-        arg12 = '12'  # Y  # Stal sprężająca - dół / ŚREDNICA strun w dolnej części elementu
-        arg13 = '13'  # Z  # Stal sprężająca – dół/NACIĄG – siła naciągu strun w dolnej części elementu [kN]
-        arg14 = '14'  # AA # Stal sprężająca – góra/ILOŚĆ strun w górnej części elementu
-        arg15 = '15'  # AB # Stal sprężająca – góra/ŚREDNICA strun w dolnej części elementu
-        arg16 = '16'  # AC # Stal sprężająca – góra/NACIĄG – siła naciągu strun w dolnej części elementu [kN]
-        arg17 = '17'  # AF # Odporność ogniowa
-        arg18 = '18'  # AG # Klasa expozycji
-        arg19 = '19'  # AJ # strun w dolnej części elementu [mm]
-        arg20 = '20'  # AK # Szerokość elementu – określa szerokość elementu [mm]
-        arg21 = '21'  # AL # Wysokość elementu – określa wysokość elementu [mm]
-        arg22 = '22'  # K  # Status – status rysunku (zgodnie z określoną listą)
-        arg23 = '23'  # L  # nazwa fabryki
-        arg24 = '24'  # T  # Siatki zbrojeniowe – masa siatek zbrojeniowych [kg]
-        arg25 = '25'  # W  # Masa elementów – masa stalowych elementów [kg]
-        # ------------ BE do BU - masa stali zbrojeniowej danej średnicy [kg] ------------ #
+        arg1 = '1'  # E  # Nazwa rysunku                                                                                 @
+        arg2 = self.search_attribute(1021)  # G  # Numer ryunku                                                                             @1021@
+        arg3 = self.search_attribute(443)  # H  # Data utworzenia rysunku                                                                      @443@
+        arg4 = self.search_attribute(440)  # I  # Ostatnia Rewizja                                                                             @440@
+        arg5 = self.search_attribute(433)  # J  # Data ostatniej rewizji                                                                       @433@
+        arg6 = self.search_attribute(18065)  # M  # Ilość sztuk danego elementu                                                                  @18065@
+        arg7 = self.search_attribute(223)  # N  # Objtość elementu netto                                                                       @223@
+        arg8 = self.search_attribute(1063)  # AI # Klasa betonu                                                                                 @1063@
+        arg9 = self.search_attribute(1083)  # AH # Minimalna wytrzymałość betonu przy rozformowaniu                                             @1083@
+        arg10 = self.search_attribute(1058)  # R  # Stal zbrojeniowa - masa zbrojenia [kg]                                                      @1058@
+        arg11 = self.search_attribute(36057)  # X  # Stal sprężająca - dół / ILOŚĆ strun w dolnej części elementu                                @36057@
+        arg12 = self.search_attribute(36046)  # Y  # Stal sprężająca - dół / ŚREDNICA strun w dolnej części elementu                             @36046@
+        arg13 = self.search_attribute(36059)  # Z  # Stal sprężająca – dół/NACIĄG – siła naciągu strun w dolnej części elementu [kN]             @36059@
+        arg14 = self.search_attribute(36043)  # AA # Stal sprężająca – góra/ILOŚĆ strun w górnej części elementu                                 @36043@
+        arg15 = self.search_attribute(36042)  # AB # Stal sprężająca – góra/ŚREDNICA strun w dolnej części elementu                              @36042@
+        arg16 = self.search_attribute(36045)  # AC # Stal sprężająca – góra/NACIĄG – siła naciągu strun w dolnej części elementu [kN]            @36045@
+        arg17 = self.search_attribute(1084)  # AF # Odporność ogniowa                                                                           @1084@
+        arg18 = self.search_attribute(1031)  # AG # Klasa expozycji                                                                             @1031@
+        arg19 = self.search_attribute(198)  # AJ # strun w dolnej części elementu [mm]                                                         @198@
+        arg20 = self.search_attribute(199)  # AK # Szerokość elementu – określa szerokość elementu [mm]                                        @199@
+        arg21 = self.search_attribute(204)  # AL # Wysokość elementu – określa wysokość elementu [mm]                                          @204@
+        arg22 = self.search_attribute(1890)  # K  # Status – status rysunku (zgodnie z określoną listą)                                         @1890@
+        arg23 = self.search_attribute(36075)  # L  # nazwa fabryki                                                                               @36075@
+        arg24 = '24'  # T  # Siatki zbrojeniowe – masa siatek zbrojeniowych [kg]                                         @
+        arg25 = '25'  # W  # Masa elementów – masa stalowych elementów [kg]                                              @
+        # ------------ BE do BU - masa stali zbrojeniowej danej średnicy [kg] ------------ #                             @
         arg26 = 'fi 4'  # BE # fi 4
         arg27 = 'fi 5'  # BF # fi 5
         arg28 = 'fi 6'  # BG # fi 6
@@ -435,4 +452,4 @@ class GetObjectAttributesInteractor():
         workFile.close()
 
         print(fullName)
-
+        self.search_attribute('508')

@@ -158,7 +158,7 @@ class GetObjectAttributesInteractor():
         if event_id == 1001:
             print("fgsdfgfsgtrhsryh hfd shtrgregrea rae  ger e")
             self.get_attributes()
-            self.PrintToTxt()
+            #self.PrintToTxt()
 
 
             return
@@ -181,10 +181,25 @@ class GetObjectAttributesInteractor():
             return
 
 
-    def print_attributes(self, element, separator):
+    def print_attributes(self, element, separator, fileName = 'example.txt'):
         """
         print the attributes
         """
+        # Get userprofile path (ex. C:\Users\Example_Username\)
+        userProfile = os.environ['USERPROFILE']
+
+        # Where the txt file would be saved
+        savePath = userProfile + '\\desktop\\PythonParts\\ATTRIBUTES\\'
+
+        # Check whether directory exists, if not create it
+        if not os.path.exists(savePath):
+            os.makedirs(savePath)
+
+        # name and extension of the file
+        #fileName = 'ExampleFileName.txt'
+        fullName = os.path.join(savePath, fileName)
+        workFile = open(fullName, "a", errors="ignore")
+        attributeList = []
 
         attributes = AllplanBaseElements.ElementsAttributeService.GetAttributes(element)
 
@@ -198,21 +213,7 @@ class GetObjectAttributesInteractor():
 
         print()
 
-        # Get userprofile path (ex. C:\Users\Example_Username\)
-        userProfile = os.environ['USERPROFILE']
 
-        # Where the txt file would be saved
-        savePath = userProfile + '\\desktop\\PythonParts\\ATTRIBUTES'
-
-        # Check whether directory exists, if not create it
-        if not os.path.exists(savePath):
-            os.makedirs(savePath)
-
-        # name and extension of the file
-        fileName = 'ExampleFileName.txt'
-        fullName = os.path.join(savePath, fileName)
-        workFile = open(fullName, "a", errors="ignore")
-        attributeList = []
         for id, value in attributes:
 
 # TUTAJ !!!!!!!!
@@ -247,8 +248,8 @@ class GetObjectAttributesInteractor():
         """
 
         for element in AllplanBaseElements.ElementsSelectService.SelectAllElements(self.coord_input.GetInputViewDocument()):
-            self.print_attributes(element, True)
-
+            self.print_attributes(element, True, fileName=str(element) + '.txt')
+            self.PrintToTxt(fileName=str(element) + '.txt')  # zmienić domyślny str na nazwę elementu
 
     def get_reinforcement_bars_fixture_attributes(self):
         """
@@ -318,8 +319,8 @@ class GetObjectAttributesInteractor():
                 print("Type description: ", AllplanElementAdapter.PrecastPropertiesService.GetPrecastElementTypeDescription(wall_child))
                 print()
 
-    def search_attribute(self, attribute_number):
-        source_path = os.environ['USERPROFILE'] + '\\desktop\\PythonParts\\ATTRIBUTES\\ExampleFileName.txt'
+    def search_attribute(self, attribute_number, fileName):
+        source_path = os.environ['USERPROFILE'] + '\\desktop\\PythonParts\\ATTRIBUTES\\' + str(fileName)
         txt_file = open(source_path, 'rt')
         attribute_to_search = '(' + str(attribute_number) + '): '
         attribute_value = ''
@@ -335,48 +336,48 @@ class GetObjectAttributesInteractor():
             return attribute_value
 
 
-    def PrintToTxt(self):
+    def PrintToTxt(self, fileName):
         # Get userprofile path (ex. C:\Users\Example_Username\)
         userProfile = os.environ['USERPROFILE']
 
         # Where the txt file would be saved
-        savePath = userProfile + '\\desktop\\PythonParts\\TXT'
+        savePath = userProfile + '\\desktop\\PythonParts\\TXT\\'
 
         # Check whether directory exists, if not create it
         if not os.path.exists(savePath):
             os.makedirs(savePath)
 
         # name and extension of the file
-        fileName = 'ExampleFileName.txt'
+        #fileName = 'ExampleFileName.txt'
 
         point = '§'
 
         # -------------------------------------------------------------------------------------
 
         arg1 = '1'  # E  # Nazwa rysunku                                                                                 @
-        arg2 = self.search_attribute(1021)  # G  # Numer ryunku                                                                             @1021@
-        arg3 = self.search_attribute(443)  # H  # Data utworzenia rysunku                                                                      @443@
-        arg4 = self.search_attribute(440)  # I  # Ostatnia Rewizja                                                                             @440@
-        arg5 = self.search_attribute(433)  # J  # Data ostatniej rewizji                                                                       @433@
-        arg6 = self.search_attribute(18065)  # M  # Ilość sztuk danego elementu                                                                  @18065@
-        arg7 = self.search_attribute(223)  # N  # Objtość elementu netto                                                                       @223@
-        arg8 = self.search_attribute(1063)  # AI # Klasa betonu                                                                                 @1063@
-        arg9 = self.search_attribute(1083)  # AH # Minimalna wytrzymałość betonu przy rozformowaniu                                             @1083@
-        arg10 = self.search_attribute(1058)  # R  # Stal zbrojeniowa - masa zbrojenia [kg]                                                      @1058@
-        arg11 = self.search_attribute(36057)  # X  # Stal sprężająca - dół / ILOŚĆ strun w dolnej części elementu                                @36057@
-        arg12 = self.search_attribute(36046)  # Y  # Stal sprężająca - dół / ŚREDNICA strun w dolnej części elementu                             @36046@
-        arg13 = self.search_attribute(36059)  # Z  # Stal sprężająca – dół/NACIĄG – siła naciągu strun w dolnej części elementu [kN]             @36059@
-        arg14 = self.search_attribute(36043)  # AA # Stal sprężająca – góra/ILOŚĆ strun w górnej części elementu                                 @36043@
-        arg15 = self.search_attribute(36042)  # AB # Stal sprężająca – góra/ŚREDNICA strun w dolnej części elementu                              @36042@
-        arg16 = self.search_attribute(36045)  # AC # Stal sprężająca – góra/NACIĄG – siła naciągu strun w dolnej części elementu [kN]            @36045@
-        arg17 = self.search_attribute(1084)  # AF # Odporność ogniowa                                                                           @1084@
-        arg18 = self.search_attribute(1031)  # AG # Klasa expozycji                                                                             @1031@
-        arg19 = self.search_attribute(198)  # AJ # strun w dolnej części elementu [mm]                                                         @198@
-        arg20 = self.search_attribute(199)  # AK # Szerokość elementu – określa szerokość elementu [mm]                                        @199@
-        arg21 = self.search_attribute(204)  # AL # Wysokość elementu – określa wysokość elementu [mm]                                          @204@
-        arg22 = self.search_attribute(1890)  # K  # Status – status rysunku (zgodnie z określoną listą)                                         @1890@
-        arg23 = self.search_attribute(36075)  # L  # nazwa fabryki                                                                               @36075@
-        arg24 = '24'  # T  # Siatki zbrojeniowe – masa siatek zbrojeniowych [kg]                                         @
+        arg2 = self.search_attribute(1021, fileName)  # G  # Numer ryunku                                                                                @1021@
+        arg3 = self.search_attribute(443, fileName)  # H  # Data utworzenia rysunku                                                                      @443@
+        arg4 = self.search_attribute(440, fileName)  # I  # Ostatnia Rewizja                                                                             @440@
+        arg5 = self.search_attribute(433, fileName)  # J  # Data ostatniej rewizji                                                                       @433@
+        arg6 = self.search_attribute(18065, fileName)  # M  # Ilość sztuk danego elementu                                                                @18065@
+        arg7 = self.search_attribute(223, fileName)  # N  # Objtość elementu netto                                                                       @223@
+        arg8 = self.search_attribute(1063, fileName)  # AI # Klasa betonu                                                                                @1063@
+        arg9 = self.search_attribute(1083, fileName)  # AH # Minimalna wytrzymałość betonu przy rozformowaniu                                            @1083@
+        arg10 = self.search_attribute(1058, fileName)  # R  # Stal zbrojeniowa - masa zbrojenia [kg]                                                     @1058@
+        arg11 = self.search_attribute(36057, fileName)  # X  # Stal sprężająca - dół / ILOŚĆ strun w dolnej części elementu                              @36057@
+        arg12 = self.search_attribute(36046, fileName)  # Y  # Stal sprężająca - dół / ŚREDNICA strun w dolnej części elementu                           @36046@
+        arg13 = self.search_attribute(36059, fileName)  # Z  # Stal sprężająca – dół/NACIĄG – siła naciągu strun w dolnej części elementu [kN]           @36059@
+        arg14 = self.search_attribute(36043, fileName)  # AA # Stal sprężająca – góra/ILOŚĆ strun w górnej części elementu                               @36043@
+        arg15 = self.search_attribute(36042, fileName)  # AB # Stal sprężająca – góra/ŚREDNICA strun w dolnej części elementu                            @36042@
+        arg16 = self.search_attribute(36045, fileName)  # AC # Stal sprężająca – góra/NACIĄG – siła naciągu strun w dolnej części elementu [kN]          @36045@
+        arg17 = self.search_attribute(1084, fileName)  # AF # Odporność ogniowa                                                                          @1084@
+        arg18 = self.search_attribute(1031, fileName)  # AG # Klasa expozycji                                                                            @1031@
+        arg19 = self.search_attribute(198, fileName)  # AJ # strun w dolnej części elementu [mm]                                                         @198@
+        arg20 = self.search_attribute(199, fileName)  # AK # Szerokość elementu – określa szerokość elementu [mm]                                        @199@
+        arg21 = self.search_attribute(204, fileName)  # AL # Wysokość elementu – określa wysokość elementu [mm]                                          @204@
+        arg22 = self.search_attribute(1890, fileName)  # K  # Status – status rysunku (zgodnie z określoną listą)                                        @1890@
+        arg23 = self.search_attribute(36075, fileName)  # L  # nazwa fabryki                                                                             @36075@
+        arg24 = self.search_attribute('empty', fileName)  # T  # Siatki zbrojeniowe – masa siatek zbrojeniowych [kg]                                         @
         arg25 = '25'  # W  # Masa elementów – masa stalowych elementów [kg]                                              @
         # ------------ BE do BU - masa stali zbrojeniowej danej średnicy [kg] ------------ #                             @
         arg26 = 'fi 4'  # BE # fi 4
@@ -444,12 +445,19 @@ class GetObjectAttributesInteractor():
             value = "arg" + str(i + 1)
             content += point + eval(value)  # get value of an expression
             print(content)
+        if self.search_attribute(498, fileName) == '':
+            tempFileName = fileName
+        else:
+            tempFileName = self.search_attribute(498, fileName) + '.txt'
 
-        fullName = os.path.join(savePath, fileName)
+        fullName = os.path.join(savePath, tempFileName)       ### !!!!!   W MIEJSCE ATR. 498 WPISAC NR ATRYBUTU ODPOWIEDZIALNEGO ZA NAZWE ELEMENTU   !!!!!!!
 
         workFile = open(fullName, "w")
         workFile.write(content)
         workFile.close()
 
         print(fullName)
-        self.search_attribute('508')
+        #self.search_attribute('508')
+
+        ###   Na jutro: Pliki w folderze ATTRIBUTES też powinny generować się w liczbie kopii równej liczbie elementów,
+        ###   w przeciwnym razie tworzy się tylko jeden plik .txt

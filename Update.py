@@ -4,8 +4,8 @@ import shutil
 from distutils.dir_util import copy_tree
 
 # sourcePath = "C:\\ProgramData\\Nemetschek\\Allplan\\2021\\Etc\\PythonPartsScripts\\AWPythonParts\\copysource"
-sourcePath = "\\ALPLAN\\alplan\\AWPythonPartsCopySource"
-targetPath = "C:\\ProgramData\\Nemetschek\\Allplan\\2021\\Etc\\PythonPartsScripts\\AWPythonParts\\aaa"
+sourcePath = "\\\ALPLAN\\alplan\\AWPythonPartsCopySource"
+targetPath = "C:\\ProgramData\\Nemetschek\\Allplan\\2021\\Etc\\PythonPartsScripts\\AWPythonParts"
 
 
 def check_allplan_version(build_ele, version):

@@ -246,10 +246,11 @@ class GetObjectAttributesInteractor():
         """
         Get the attributes from all objects
         """
-
+        i = 0
         for element in AllplanBaseElements.ElementsSelectService.SelectAllElements(self.coord_input.GetInputViewDocument()):
-            self.print_attributes(element, True, fileName=str(element) + '.txt')
-            self.PrintToTxt(fileName=str(element) + '.txt')  # zmienić domyślny str na nazwę elementu
+            i += 1
+            self.print_attributes(element, True, fileName=str(element) + str(i) + '.txt')
+            self.PrintToTxt(fileName=str(element) + str(i) + '.txt')  # zmienić domyślny str na nazwę elementu
 
     def get_reinforcement_bars_fixture_attributes(self):
         """

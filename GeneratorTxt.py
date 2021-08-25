@@ -198,7 +198,7 @@ class GetObjectAttributesInteractor():
         # name and extension of the file
         #fileName = 'ExampleFileName.txt'
         fullName = os.path.join(savePath, fileName)
-        workFile = open(fullName, "a", errors="ignore")
+        workFile = open(fullName, "w", errors="ignore")
         attributeList = []
 
         attributes = AllplanBaseElements.ElementsAttributeService.GetAttributes(element)
@@ -320,7 +320,7 @@ class GetObjectAttributesInteractor():
                 print("Type description: ", AllplanElementAdapter.PrecastPropertiesService.GetPrecastElementTypeDescription(wall_child))
                 print()
 
-    def search_attribute(self, attribute_number, fileName):
+    def search_attribute(self, attribute_number, fileName, multiplier = 1):
         source_path = os.environ['USERPROFILE'] + '\\desktop\\PythonParts\\ATTRIBUTES\\' + str(fileName)
         txt_file = open(source_path, 'rt')
         attribute_to_search = '(' + str(attribute_number) + '): '
@@ -331,7 +331,7 @@ class GetObjectAttributesInteractor():
                 length_of_attribute_number = len(attribute_to_search)
                 index2 = index1 + length_of_attribute_number
                 attribute_value = line[index2:-1]
-                return attribute_value
+                return attribute_value * multiplier
 
         if attribute_value == '':
             return attribute_value
@@ -356,90 +356,90 @@ class GetObjectAttributesInteractor():
         # -------------------------------------------------------------------------------------
 
         arg1 = '1'  # E  # Nazwa rysunku                                                                                 @
-        arg2 = self.search_attribute(1021, fileName)  # G  # Numer ryunku                                                                                @1021@
-        arg3 = self.search_attribute(443, fileName)  # H  # Data utworzenia rysunku                                                                      @443@
-        arg4 = self.search_attribute(440, fileName)  # I  # Ostatnia Rewizja                                                                             @440@
-        arg5 = self.search_attribute(433, fileName)  # J  # Data ostatniej rewizji                                                                       @433@
-        arg6 = self.search_attribute(18065, fileName)  # M  # Ilość sztuk danego elementu                                                                @18065@
-        arg7 = self.search_attribute(223, fileName)  # N  # Objtość elementu netto                                                                       @223@
-        arg8 = self.search_attribute(1063, fileName)  # AI # Klasa betonu                                                                                @1063@
-        arg9 = self.search_attribute(1083, fileName)  # AH # Minimalna wytrzymałość betonu przy rozformowaniu                                            @1083@
-        arg10 = self.search_attribute(1058, fileName)  # R  # Stal zbrojeniowa - masa zbrojenia [kg]                                                     @1058@
-        arg11 = self.search_attribute(36057, fileName)  # X  # Stal sprężająca - dół / ILOŚĆ strun w dolnej części elementu                              @36057@
-        arg12 = self.search_attribute(36046, fileName)  # Y  # Stal sprężająca - dół / ŚREDNICA strun w dolnej części elementu                           @36046@
-        arg13 = self.search_attribute(36059, fileName)  # Z  # Stal sprężająca – dół/NACIĄG – siła naciągu strun w dolnej części elementu [kN]           @36059@
-        arg14 = self.search_attribute(36043, fileName)  # AA # Stal sprężająca – góra/ILOŚĆ strun w górnej części elementu                               @36043@
-        arg15 = self.search_attribute(36042, fileName)  # AB # Stal sprężająca – góra/ŚREDNICA strun w dolnej części elementu                            @36042@
-        arg16 = self.search_attribute(36045, fileName)  # AC # Stal sprężająca – góra/NACIĄG – siła naciągu strun w dolnej części elementu [kN]          @36045@
-        arg17 = self.search_attribute(1084, fileName)  # AF # Odporność ogniowa                                                                          @1084@
-        arg18 = self.search_attribute(1031, fileName)  # AG # Klasa expozycji                                                                            @1031@
-        arg19 = self.search_attribute(198, fileName)  # AJ # strun w dolnej części elementu [mm]                                                         @198@
-        arg20 = self.search_attribute(199, fileName)  # AK # Szerokość elementu – określa szerokość elementu [mm]                                        @199@
-        arg21 = self.search_attribute(204, fileName)  # AL # Wysokość elementu – określa wysokość elementu [mm]                                          @204@
-        arg22 = self.search_attribute(1890, fileName)  # K  # Status – status rysunku (zgodnie z określoną listą)                                        @1890@
-        arg23 = self.search_attribute(36075, fileName)  # L  # nazwa fabryki                                                                             @36075@
+        arg2 = self.search_attribute(1021, fileName)      # G  # Numer ryunku                                                                               @1021@
+        arg3 = self.search_attribute(443, fileName)       # H  # Data utworzenia rysunku                                                                     @443@
+        arg4 = self.search_attribute(440, fileName)       # I  # Ostatnia Rewizja                                                                            @440@
+        arg5 = self.search_attribute(433, fileName)       # J  # Data ostatniej rewizji                                                                      @433@
+        arg6 = self.search_attribute(18065, fileName)     # M  # Ilość sztuk danego elementu                                                               @18065@
+        arg7 = self.search_attribute(223, fileName)       # N  # Objtość elementu netto                                                                      @223@
+        arg8 = self.search_attribute(1063, fileName)      # AI # Klasa betonu                                                                               @1063@
+        arg9 = self.search_attribute(1083, fileName)      # AH # Minimalna wytrzymałość betonu przy rozformowaniu                                           @1083@
+        arg10 = self.search_attribute(1058, fileName)     # R  # Stal zbrojeniowa - masa zbrojenia [kg]                                                     @1058@
+        arg11 = self.search_attribute(36057, fileName)    # X  # Stal sprężająca - dół / ILOŚĆ strun w dolnej części elementu                              @36057@
+        arg12 = self.search_attribute(36046, fileName)    # Y  # Stal sprężająca - dół / ŚREDNICA strun w dolnej części elementu                           @36046@
+        arg13 = self.search_attribute(36059, fileName)    # Z  # Stal sprężająca – dół/NACIĄG – siła naciągu strun w dolnej części elementu [kN]           @36059@
+        arg14 = self.search_attribute(36043, fileName)    # AA # Stal sprężająca – góra/ILOŚĆ strun w górnej części elementu                               @36043@
+        arg15 = self.search_attribute(36042, fileName)    # AB # Stal sprężająca – góra/ŚREDNICA strun w dolnej części elementu                            @36042@
+        arg16 = self.search_attribute(36045, fileName)    # AC # Stal sprężająca – góra/NACIĄG – siła naciągu strun w dolnej części elementu [kN]          @36045@
+        arg17 = self.search_attribute(1084, fileName)     # AF # Odporność ogniowa                                                                          @1084@
+        arg18 = self.search_attribute(1031, fileName)     # AG # Klasa expozycji                                                                            @1031@
+        arg19 = self.search_attribute(198, fileName)      # AJ # strun w dolnej części elementu [mm]                                                         @198@
+        arg20 = self.search_attribute(199, fileName)      # AK # Szerokość elementu – określa szerokość elementu [mm]                                        @199@
+        arg21 = self.search_attribute(204, fileName)      # AL # Wysokość elementu – określa wysokość elementu [mm]                                          @204@
+        arg22 = self.search_attribute(1890, fileName)     # K  # Status – status rysunku (zgodnie z określoną listą)                                        @1890@
+        arg23 = self.search_attribute(36075, fileName)    # L  # nazwa fabryki                                                                             @36075@
         arg24 = self.search_attribute('empty', fileName)  # T  # Siatki zbrojeniowe – masa siatek zbrojeniowych [kg]                                         @
-        arg25 = '25'  # W  # Masa elementów – masa stalowych elementów [kg]                                              @
+        arg25 = self.search_attribute('empty', fileName)  # W  # Masa elementów – masa stalowych elementów [kg]                                              @
         # ------------ BE do BU - masa stali zbrojeniowej danej średnicy [kg] ------------ #                             @
-        arg26 = 'fi 4'  # BE # fi 4
-        arg27 = 'fi 5'  # BF # fi 5
-        arg28 = 'fi 6'  # BG # fi 6
-        arg29 = 'fi 8'  # BH # fi 8
-        arg30 = 'fi 10'  # BI # fi 10
-        arg31 = 'fi 12'  # BJ # fi 12
-        arg32 = 'fi 14'  # BK # fi 14
-        arg33 = 'fi 16'  # BL # fi 16
-        arg34 = 'fi 18'  # BM # fi 18
-        arg35 = 'fi 20'  # BN # fi 20
-        arg36 = 'fi 22'  # BO # fi 22
-        arg37 = 'fi 25'  # BP # fi 25
-        arg38 = 'fi 28'  # BQ # fi 28
-        arg39 = 'fi 32'  # BR # fi 32
-        arg40 = 'fi 40'  # BS # fi 40
-        arg41 = 'fi 42'  # BT # fi 42
-        arg42 = 'fi 45'  # BU # fi 45
+        arg26 = self.search_attribute('empty', fileName)  # BE # fi 4
+        arg27 = self.search_attribute('empty', fileName)  # BF # fi 5
+        arg28 = self.search_attribute('empty', fileName)  # BG # fi 6
+        arg29 = self.search_attribute('empty', fileName)  # BH # fi 8
+        arg30 = self.search_attribute('empty', fileName)  # BI # fi 10
+        arg31 = self.search_attribute('empty', fileName)  # BJ # fi 12
+        arg32 = self.search_attribute('empty', fileName)  # BK # fi 14
+        arg33 = self.search_attribute('empty', fileName)  # BL # fi 16
+        arg34 = self.search_attribute('empty', fileName)  # BM # fi 18
+        arg35 = self.search_attribute('empty', fileName)  # BN # fi 20
+        arg36 = self.search_attribute('empty', fileName)  # BO # fi 22
+        arg37 = self.search_attribute('empty', fileName)  # BP # fi 25
+        arg38 = self.search_attribute('empty', fileName)  # BQ # fi 28
+        arg39 = self.search_attribute('empty', fileName)  # BR # fi 32
+        arg40 = self.search_attribute('empty', fileName)  # BS # fi 40
+        arg41 = self.search_attribute('empty', fileName)  # BT # fi 42
+        arg42 = self.search_attribute('empty', fileName)  # BU # fi 45
         # -------------------------------------------------------------------------------------------------------------------- #
-        arg43 = '27'  # BB # Występuje – parametr dla akcesoriów stalowych, dający informacje w jakich elementach występuje
-        arg44 = '28'  # Q  # Sztuki tab. zbrojeniowa – ilość sztuk całego zbrojenia dla danego elementu
-        arg45 = '29'  # V  # Sztuki tab. stal – ilość elementów stalowych
+        arg43 = self.search_attribute('empty', fileName)  # BB # Występuje – parametr dla akcesoriów stalowych, dający informacje w jakich elementach występuje
+        arg44 = self.search_attribute(18065, fileName)  # Q  # Sztuki tab. zbrojeniowa – ilość sztuk całego zbrojenia dla danego elementu
+        arg45 = self.search_attribute('empty', fileName)  # V  # Sztuki tab. stal – ilość elementów stalowych
         # ------- HS do IP - Rev_... – rewizja elementu, pobiera takie dane jak: symbol rewizji, opis, data, użytkownik ------ #
-        arg46 = 'REV1'  # HS #
-        arg47 = 'REV2'  # HT ##
-        arg48 = 'REV3'  # HU ###
-        arg49 = 'REV4'  # HV ####
-        arg50 = 'REV5'  # HW #####
-        arg51 = 'REV6'  # HX ###### Prawdopodobnie nieaktualne i zawsze puste
-        arg52 = 'REV7'  # HY ####
-        arg53 = 'REV8'  # HZ ###
-        arg54 = 'REV9'  # IA ##
-        arg55 = 'REV10'  # IB #
+        arg46 = self.search_attribute('empty', fileName)  # HS #
+        arg47 = self.search_attribute('empty', fileName)  # HT ##
+        arg48 = self.search_attribute('empty', fileName)  # HU ###
+        arg49 = self.search_attribute('empty', fileName)  # HV ####
+        arg50 = self.search_attribute('empty', fileName)  # HW #####
+        arg51 = self.search_attribute('empty', fileName)  # HX ###### Prawdopodobnie nieaktualne i zawsze puste
+        arg52 = self.search_attribute('empty', fileName)  # HY ####
+        arg53 = self.search_attribute('empty', fileName)  # HZ ###
+        arg54 = self.search_attribute('empty', fileName)  # IA ##
+        arg55 = self.search_attribute('empty', fileName)  # IB #
         # -------------------------------------------------------------------------------------------------------------------- #
-        arg56 = '31'  # S  # Sztuki tab. siatki – ilość sztuk siatek dla zbrojenia danego elementu
-        arg57 = '32'  # O  # Masa – masa elementu (netto) [kg]
-        arg58 = '33'  # P  # Masa montażowa – masa montażowa elementu [kg]
-        arg59 = '34'  # BC # Symbol z oferty – nieaktualne
-        arg60 = '35'  # AM # Powierzchnia po obrysie [m2]
+        arg56 = self.search_attribute('empty', fileName)  # S  # Sztuki tab. siatki – ilość sztuk siatek dla zbrojenia danego elementu
+        arg57 = self.search_attribute(721, fileName, multiplier=1000)  # O  # Masa – masa elementu (netto) [kg]
+        arg58 = self.search_attribute(721, fileName, multiplier=1150)  # P  # Masa montażowa – masa montażowa elementu [kg]
+        arg59 = self.search_attribute('empty', fileName)  # BC # Symbol z oferty – nieaktualne
+        arg60 = self.search_attribute('empty', fileName)  # AM # Powierzchnia po obrysie [m2]
 
         arg61 = '§$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$|$ $$'  # REWIZJE # Rozdzielone '|' rewizje. Pobiera takie informacje jak: symbol rewizji, komentarz, datę rewizji i użytkownika.
 
-        arg62 = '37'  # A   # Nazwa – nazwa elementu
-        arg63 = '38'  # B   # Typ – typ elementu (zgodnie z określoną listą)
-        arg64 = '39'  # C   # Zakres – określa miejsce występowania elementu
-        arg65 = '40'  # D   # Część – określa czy element ma orientację poziomą czy pionową
-        arg66 = '41'  # D1  # Indeks kontraktu
-        arg67 = '42'  # D2  # Nazwa pliku dwg
-        arg68 = '43'  # D3  # Nazwa użytkownika wykonującego funkcje „pref”-export danych
-        arg69 = '44'  # D4  # Typ formy (tylko na dźwigarów „w tej chwili”)
-        arg70 = '45'  # D5  # Lista pkt POLX (czyli obwiednia elementu)
-        arg71 = '46'  # D6  # Wykończenie (tekst w postaci Malowanie, Paint, Tynkowanie,Plastering, Cegla, Brick)
-        arg72 = '47'  # D7  # Rysunek wykończenia (tekst w postaci WS_001M)
-        arg73 = '48'  # D8  # Wysokość stron dół  (dla plyt HC)
-        arg74 = '49'  # D9  # Wysokość strun góra (dla płyt HC)
-        arg75 = '50'  # D10 # Wymiar całkowity długość
-        arg76 = '51'  # D11 # Wymiar całkowity szerokośc
-        arg77 = '52'  # D12 # Wymiar całkowity wysokość
-        arg78 = '53'  # D13 # objętość warstwy elewacyjnej
-        arg79 = '54'  # D14 # Objętośc warstwy konstrukcyjnej
+        arg62 = self.search_attribute(1021, fileName)  # A   # Nazwa – nazwa elementu
+        arg63 = self.search_attribute(1893, fileName)  # B   # Typ – typ elementu (zgodnie z określoną listą)
+        arg64 = self.search_attribute('empty', fileName)  # C   # Zakres – określa miejsce występowania elementu
+        arg65 = self.search_attribute('empty', fileName)  # D   # Część – określa czy element ma orientację poziomą czy pionową
+        arg66 = self.search_attribute(936, fileName)  # D1  # Indeks kontraktu
+        arg67 = self.search_attribute('empty', fileName)  # D2  # Nazwa pliku dwg
+        arg68 = self.search_attribute(20, fileName)  # D3  # Nazwa użytkownika wykonującego funkcje „pref”-export danych
+        arg69 = self.search_attribute(36061, fileName)  # D4  # Typ formy (tylko na dźwigarów „w tej chwili”)
+        arg70 = self.search_attribute('empty', fileName)  # D5  # Lista pkt POLX (czyli obwiednia elementu)
+        arg71 = self.search_attribute('empty', fileName)  # D6  # Wykończenie (tekst w postaci Malowanie, Paint, Tynkowanie,Plastering, Cegla, Brick)
+        arg72 = self.search_attribute('empty', fileName)  # D7  # Rysunek wykończenia (tekst w postaci WS_001M)
+        arg73 = self.search_attribute('empty', fileName)  # D8  # Wysokość stron dół  (dla plyt HC)
+        arg74 = self.search_attribute('empty', fileName)  # D9  # Wysokość strun góra (dla płyt HC)
+        arg75 = self.search_attribute('empty', fileName)  # D10 # Wymiar całkowity długość
+        arg76 = self.search_attribute('empty', fileName)  # D11 # Wymiar całkowity szerokośc
+        arg77 = self.search_attribute('empty', fileName)  # D12 # Wymiar całkowity wysokość
+        arg78 = self.search_attribute('empty', fileName)  # D13 # objętość warstwy elewacyjnej
+        arg79 = self.search_attribute('empty', fileName)  # D14 # Objętośc warstwy konstrukcyjnej
 
         content = ''
         for i in range(79):
@@ -447,18 +447,26 @@ class GetObjectAttributesInteractor():
             content += point + eval(value)  # get value of an expression
             print(content)
         if self.search_attribute(498, fileName) == '':
-            tempFileName = fileName
+            tempFileName = "delete"
         else:
-            tempFileName = self.search_attribute(498, fileName) + '.txt'
+            tempFileName = self.search_attribute(498, fileName) + '.txt'        ### !!!!!   W MIEJSCE ATR. 498 WPISAC NR ATRYBUTU ODPOWIEDZIALNEGO ZA NAZWE ELEMENTU   !!!!!!!
 
-        fullName = os.path.join(savePath, tempFileName)       ### !!!!!   W MIEJSCE ATR. 498 WPISAC NR ATRYBUTU ODPOWIEDZIALNEGO ZA NAZWE ELEMENTU   !!!!!!!
 
-        workFile = open(fullName, "w")
-        workFile.write(content)
-        workFile.close()
+        fullName = os.path.join(savePath, tempFileName)
+
+        if tempFileName == 'delete':
+            pass
+        else:
+            workFile = open(fullName, "w")
+            workFile.write(content)
+            workFile.close()
 
         print(fullName)
         #self.search_attribute('508')
 
         ###   Na jutro: Pliki w folderze ATTRIBUTES też powinny generować się w liczbie kopii równej liczbie elementów,
         ###   w przeciwnym razie tworzy się tylko jeden plik .txt
+
+        # atrybuty z listy np. 1000 * (nr atr) to zmina jednostki, dodać funkcj
+
+        # Dodać przycisk wybierz obszar

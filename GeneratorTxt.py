@@ -355,7 +355,7 @@ class GetObjectAttributesInteractor():
 
         # -------------------------------------------------------------------------------------
 
-        arg1 = '1'  # E  # Nazwa rysunku                                                                                 @
+        arg1 = self.search_attribute('empty', filename)   # E  # Nazwa rysunku                                                                                 @
         arg2 = self.search_attribute(1021, fileName)      # G  # Numer ryunku                                                                               @1021@
         arg3 = self.search_attribute(443, fileName)       # H  # Data utworzenia rysunku                                                                     @443@
         arg4 = self.search_attribute(440, fileName)       # I  # Ostatnia Rewizja                                                                            @440@
@@ -465,8 +465,8 @@ class GetObjectAttributesInteractor():
         #self.search_attribute('508')
 
         ###   Na jutro: Pliki w folderze ATTRIBUTES też powinny generować się w liczbie kopii równej liczbie elementów,
-        ###   w przeciwnym razie tworzy się tylko jeden plik .txt
+        ###   w przeciwnym razie tworzy się tylko jeden plik .txt                                                        ZROBIONE
 
-        # atrybuty z listy np. 1000 * (nr atr) to zmina jednostki, dodać funkcj
+        # atrybuty z listy np. 1000 * (nr atr) to zmina jednostki, dodać funkcj                                          ZROBIONE
 
-        # Dodać przycisk wybierz obszar
+        # Dodać przycisk wybierz obszar                                                                                  ZREZYGNOWANO

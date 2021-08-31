@@ -355,7 +355,7 @@ class GetObjectAttributesInteractor():
 
         # -------------------------------------------------------------------------------------
 
-        arg1 = self.search_attribute('empty', filename)   # E  # Nazwa rysunku                                                                                 @
+        arg1 = self.search_attribute('empty', fileName)   # E  # Nazwa rysunku                                                                                 @
         arg2 = self.search_attribute(1021, fileName)      # G  # Numer ryunku                                                                               @1021@
         arg3 = self.search_attribute(443, fileName)       # H  # Data utworzenia rysunku                                                                     @443@
         arg4 = self.search_attribute(440, fileName)       # I  # Ostatnia Rewizja                                                                            @440@
@@ -446,10 +446,10 @@ class GetObjectAttributesInteractor():
             value = "arg" + str(i + 1)
             content += point + eval(value)  # get value of an expression
             print(content)
-        if self.search_attribute(498, fileName) == '':
+        if self.search_attribute(1021, fileName) == '':
             tempFileName = "delete"
         else:
-            tempFileName = self.search_attribute(498, fileName) + '.txt'        ### !!!!!   W MIEJSCE ATR. 498 WPISAC NR ATRYBUTU ODPOWIEDZIALNEGO ZA NAZWE ELEMENTU   !!!!!!!
+            tempFileName = self.search_attribute(1021, fileName) + '.txt'        ### !!!!!   W MIEJSCE ATR. 498 WPISAC NR ATRYBUTU ODPOWIEDZIALNEGO ZA NAZWE ELEMENTU   !!!!!!!
 
 
         fullName = os.path.join(savePath, tempFileName)

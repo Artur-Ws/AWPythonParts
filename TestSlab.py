@@ -32,7 +32,7 @@ class Slab():
 
     def create_slab(self, build_ele):
 
-        slab = AllplanGeo.Polyhedron3D.CreateCuboid(1000,1000,1000)
+        slab = AllplanGeo.Polyhedron3D.CreateCuboid(build_ele.Width.value,1000,1000)
 
         com_prop = AllplanBaseElements.CommonProperties()
         com_prop.GetGlobalProperties()

@@ -34,13 +34,15 @@ class Slab():
         self.document = doc
 
     def create(self,build_ele):
-        self.create_slab(build_ele)
+        python_part = self.create_slab(build_ele)
 
-        return(self.model_ele_list, self.handle_list)
+        return(python_part, self.handle_list)
 
 ### "Name" in .pyp file is reference to parameter when create an element
 
     def create_slab(self, build_ele):
+
+        model_ele_list = []
 
         thickness = build_ele.Thickness.value
         length = build_ele.Length.value
@@ -68,8 +70,16 @@ class Slab():
         com_prop = AllplanBaseElements.CommonProperties()
         com_prop.GetGlobalProperties()
         slab_obiect = AllplanBasisElements.ModelElement3D(com_prop, balcony)
+        model_ele_list.append(slab_obiect)
 
-        return self.model_ele_list.append(slab_obiect)
+        views = [View2D3D (model_ele_list)]
+
+        pythonpart = PythonPart("TestSlab",
+                                parameter_list=build_ele.get_params_list(),
+                                hash_value=build_ele.get_hash(),
+                                python_file=build_ele.pyp_file_name,
+                                views=views)
+        return pythonpart.create()
 
     def slope(self, build_ele, thickness, length, width):
 

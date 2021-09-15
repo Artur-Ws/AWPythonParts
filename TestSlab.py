@@ -10,6 +10,7 @@ import NemAll_Python_Reinforcement as AllplanReinf
 import StdReinfShapeBuilder.LinearBarPlacementBuilder as LinearBarBuilder
 import StdReinfShapeBuilder.GeneralReinfShapeBuilder as GeneralShapeBuilder
 import GeometryValidate as GeometryValidate
+from StdReinfShapeBuilder.RotationAngles import RotationAngles
 
 import math
 
@@ -43,6 +44,7 @@ class Slab():
     def create_slab(self, build_ele):
 
         model_ele_list = []
+        reinf_list = []
 
         thickness = build_ele.Thickness.value
         length = build_ele.Length.value
@@ -72,13 +74,17 @@ class Slab():
         slab_obiect = AllplanBasisElements.ModelElement3D(com_prop, balcony)
         model_ele_list.append(slab_obiect)
 
+        self.bottom_mesh(build_ele,reinf_list)
+        self.main_mesh(build_ele, reinf_list)
+
         views = [View2D3D (model_ele_list)]
 
         pythonpart = PythonPart("TestSlab",
                                 parameter_list=build_ele.get_params_list(),
                                 hash_value=build_ele.get_hash(),
                                 python_file=build_ele.pyp_file_name,
-                                views=views)
+                                views=views,
+                                reinforcement = reinf_list)
         return pythonpart.create()
 
     def slope(self, build_ele, thickness, length, width):
@@ -111,7 +117,7 @@ class Slab():
         ws_pol += AllplanGeo.Point3D(0, 0, slab_thickness + slope_height)
         ws_pol += AllplanGeo.Point3D(0, 0, slab_thickness + slope_height + ws_height)
         ws_pol += AllplanGeo.Point3D(0, ws_length, slab_thickness + slope_height + ws_height)
-        ws_pol += AllplanGeo.Point3D(0, ws_length + ws_sl_length , slab_thickness)
+        ws_pol += AllplanGeo.Point3D(0, ws_length + ws_sl_length, slab_thickness)
         ws_pol += AllplanGeo.Point3D(0, 0, slab_thickness + slope_height)
 
         ws_path = AllplanGeo.Polyline3D()
@@ -173,11 +179,95 @@ class Slab():
 
         return left_drip, right_drip
 
+    def bottom_mesh(self, build_ele, reinf_list):
 
+        concrete_cover = build_ele.bottom_ConcreteCover.value
+        steel_grade = build_ele.bottom_SteelGrade.value
+        f_diameter = build_ele.bottom_first_diameter.value
+        s_diameter = build_ele.bottom_second_diameter.value
+        # First placement
+
+        shape_builder = AllplanReinf.ReinforcementShapeBuilder()
+        shape_builder.AddPoints([
+                                 (AllplanGeo.Point2D(0, 0), concrete_cover),
+                                 (AllplanGeo.Point2D(build_ele.Width.value, 0), concrete_cover),
+                                 (concrete_cover)])
+
+        shape = shape_builder.CreateShape(f_diameter, -1, steel_grade, -1,
+                                          AllplanReinf.BendingShapeType.LongitudinalBar)
+
+        start_point = AllplanGeo.Point3D(0,concrete_cover + f_diameter/2 + 20, concrete_cover + f_diameter/2)
+        end_point = AllplanGeo.Point3D(0, build_ele.Length.value - concrete_cover - f_diameter/2 - 20, concrete_cover + f_diameter/2)
+
+        reinf_list.append(LinearBarBuilder.create_linear_bar_placement_from_to_by_dist(
+                    1, shape, start_point, end_point,
+                    concrete_cover, concrete_cover, build_ele.bottom_first_spacing.value,
+                    LinearBarBuilder.StartEndPlacementRule.AdaptDistance, True))
+
+        # Secondary placement
+
+        shape_builder = AllplanReinf.ReinforcementShapeBuilder()
+        shape_builder.AddPoints([(AllplanGeo.Point2D(0, 0), concrete_cover),
+                                 (AllplanGeo.Point2D(0, build_ele.Length.value), concrete_cover), (concrete_cover)])
+
+        shape = shape_builder.CreateShape(s_diameter, -1, steel_grade, -1,
+                                          AllplanReinf.BendingShapeType.LongitudinalBar)
+
+        start_point = AllplanGeo.Point3D(concrete_cover + s_diameter/2 + 20, 0, concrete_cover + f_diameter + s_diameter/2)
+        end_point = AllplanGeo.Point3D(build_ele.Width.value - concrete_cover - s_diameter/2 - 20, 0, concrete_cover + f_diameter + s_diameter/2)
+
+
+        reinf_list.append(LinearBarBuilder.create_linear_bar_placement_from_to_by_dist(1, shape,
+                    start_point, end_point, concrete_cover, concrete_cover, build_ele.bottom_second_spacing.value,
+                    LinearBarBuilder.StartEndPlacementRule.AdaptDistance, True))
+
+
+    def main_mesh(self, build_ele, reinf_list):
+
+        concrete_cover = build_ele.up_ConcreteCover.value
+        steel_grade = build_ele.up_SteelGrade.value
+        f_diameter = build_ele.up_first_diameter.value
+        s_diameter = build_ele.up_second_diameter.value
+        height = build_ele.Thickness.value + build_ele.sl_height.value
+
+        # First Placement
+
+        shape_builder = AllplanReinf.ReinforcementShapeBuilder()
+        shape_builder.AddPoints([(AllplanGeo.Point2D(0,0), concrete_cover),
+                                 (AllplanGeo.Point2D(0,build_ele.Length.value), concrete_cover), (concrete_cover)])
+
+        shape = shape_builder.CreateShape(f_diameter, -1, steel_grade, -1, AllplanReinf.BendingShapeType.LongitudinalBar)
+        angle = math.degrees(math.atan(build_ele.sl_height.value/build_ele.Length.value))
+
+        shape.Rotate(RotationAngles(-angle, 0, 0))
+        print(angle)
+        start_point = AllplanGeo.Point3D(concrete_cover + f_diameter/2 + 20, 0, height - f_diameter/2 - concrete_cover)
+        end_point = AllplanGeo.Point3D(build_ele.Width.value - concrete_cover - f_diameter/2 - 20, 0, height - f_diameter/2 - concrete_cover)
+
+        reinf_list.append(LinearBarBuilder.create_linear_bar_placement_from_to_by_dist(1, shape, start_point, end_point,
+                    concrete_cover, concrete_cover, build_ele.up_first_spacing.value,
+                    LinearBarBuilder.StartEndPlacementRule.AdaptDistance, True))
+
+
+        # # Secondary Placement
+        #
+        # shape_builder = AllplanReinf.ReinforcementShapeBuilder()
+        # shape_builder.AddPoints([(AllplanGeo.Point2D(0,0), concrete_cover),
+        #                          (AllplanGeo.Point2D(build_ele.Width.value,0), concrete_cover), (concrete_cover)])
+        #
+        # shape = shape_builder.CreateShape(s_diameter, -1, steel_grade, -1, AllplanReinf.BendingShapeType.LongitudinalBar)
+        #
+        # start_point = AllplanGeo.Point3D(0, concrete_cover + s_diameter/2 + 20, height + build_ele.sl_height.value - s_diameter/2 - f_diameter - concrete_cover)
+        # end_point = AllplanGeo.Point3D(0, build_ele.Length.value - concrete_cover - s_diameter/2 - 20, height - s_diameter/2 - concrete_cover - f_diameter)
+        #
+        # reinf_list.append(LinearBarBuilder.create_linear_bar_placement_from_to_by_dist(1, shape, start_point, end_point,
+        #             concrete_cover, concrete_cover, build_ele.up_second_spacing.value,
+        #             LinearBarBuilder.StartEndPlacementRule.AdaptDistance, True))
+        #
 
 ########################################################################################################################
-window = tkinter.Tk()
-window.title("Non-crashed")
-info = tkinter.Label(window, text='Jeśli widzisz to okno to wszystko raczej działa')
-info.grid(column=0, row=0)
-window.mainloop()
+# window = tkinter.Tk()
+# window.title("Non-crashed")
+# info = tkinter.Label(window, text='Jeśli widzisz to okno to wszystko raczej działa')
+# info.grid(column=0, row=0)
+# window.mainloop()

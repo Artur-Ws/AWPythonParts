@@ -8,7 +8,7 @@
 
     <Page>
         <Name>Page1</Name>
-        <Text>BalkonPP</Text>
+        <Text>Geometria</Text>
 
         <Parameter>
             <Name>Expander1</Name>
@@ -36,7 +36,7 @@
         </Parameter>
 
         <Parameter>
-            <Name>Expander1</Name>
+            <Name>Expander2</Name>
             <Text>Waterstop</Text>
             <Value>False</Value>
             <ValueType>Expander</ValueType>
@@ -61,7 +61,7 @@
         </Parameter>
 
         <Parameter>
-            <Name>Expander1</Name>
+            <Name>Expander3</Name>
             <Text>Spadek</Text>
             <Value>False</Value>
             <ValueType>Expander</ValueType>
@@ -74,7 +74,7 @@
         </Parameter>
 
         <Parameter>
-            <Name>Expander1</Name>
+            <Name>Expander4</Name>
             <Text>Kapinos</Text>
             <Value>False</Value>
             <ValueType>Expander</ValueType>
@@ -121,4 +121,96 @@
         </Parameter>
     </Page>
 
+    <Page>
+        <Name>ReinfTab</Name>
+        <Text>Zbrojenie</Text>
+        <Parameter>
+            <Name>Expander5</Name>
+            <Text>Siatka dolna</Text>
+            <ValueType>Expander</ValueType>
+
+            <Parameter>
+                <Name>bottom_SteelGrade</Name>
+                <Text>Typ zbrojenia</Text>
+                <Value>4</Value>
+                <ValueType>ReinfSteelGrade</ValueType>
+            </Parameter>
+            <Parameter>
+                <Name>bottom_ConcreteCover</Name>
+                <Text>Otulina</Text>
+                <Value>30</Value>
+                <ValueType>Length</ValueType>
+            </Parameter>
+
+            <Parameter>
+                <Name>bottom_first_diameter</Name>
+                <Text>Średnica prętów głównych</Text>
+                <Value>6</Value>
+                <ValueType>ReinfBarDiameter</ValueType>
+            </Parameter>
+            <Parameter>
+                <Name>bottom_first_spacing</Name>
+                <Text>Rozzstaw prętów głównych</Text>
+                <Value>150</Value>
+                <ValueType>double</ValueType>
+            </Parameter>
+            <Parameter>
+                <Name>bottom_second_diameter</Name>
+                <Text>Średnica prętów poprzecznych</Text>
+                <Value>6</Value>
+                <ValueType>ReinfBarDiameter</ValueType>
+            </Parameter>
+            <Parameter>
+                <Name>bottom_second_spacing</Name>
+                <Text>Rozzstaw prętów poprzecznych</Text>
+                <Value>150</Value>
+                <ValueType>double</ValueType>
+            </Parameter>
+
+        </Parameter>
+        <Parameter>
+            <Name>Expander6</Name>
+            <Text>Siatka górna</Text>
+            <ValueType>Expander</ValueType>
+
+            <Parameter>
+                <Name>up_SteelGrade</Name>
+                <Text>Typ zbrojenia</Text>
+                <Value>4</Value>
+                <ValueType>ReinfSteelGrade</ValueType>
+            </Parameter>
+            <Parameter>
+                <Name>up_ConcreteCover</Name>
+                <Text>Otulina</Text>
+                <Value>30</Value>
+                <ValueType>Length</ValueType>
+            </Parameter>
+
+            <Parameter>
+                <Name>up_first_diameter</Name>
+                <Text>Średnica prętów głównych</Text>
+                <Value>12</Value>
+                <ValueType>ReinfBarDiameter</ValueType>
+            </Parameter>
+            <Parameter>
+                <Name>up_first_spacing</Name>
+                <Text>Rozzstaw prętów głównych</Text>
+                <Value>150</Value>
+                <ValueType>double</ValueType>
+            </Parameter>
+            <Parameter>
+                <Name>up_second_diameter</Name>
+                <Text>Średnica prętów poprzecznych</Text>
+                <Value>6</Value>
+                <ValueType>ReinfBarDiameter</ValueType>
+            </Parameter>
+            <Parameter>
+                <Name>up_second_spacing</Name>
+                <Text>Rozzstaw prętów poprzecznych</Text>
+                <Value>200</Value>
+                <ValueType>double</ValueType>
+            </Parameter>
+
+        </Parameter>
+    </Page>
 </Element>

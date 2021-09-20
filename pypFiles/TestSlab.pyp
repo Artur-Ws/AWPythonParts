@@ -212,5 +212,64 @@
             </Parameter>
 
         </Parameter>
+
+
+        <Parameter>
+            <Name>Expander7</Name>
+            <Text>Ubary po bokach</Text>
+            <ValueType>Expander</ValueType>
+
+            <Parameter>
+                <Name>side_ubars_SteelGrade</Name>
+                <Text>Typ zbrojenia</Text>
+                <Value>4</Value>
+                <ValueType>ReinfSteelGrade</ValueType>
+            </Parameter>
+            <Parameter>
+                <Name>BendingRoller</Name>
+                <Text>Wałek giętarki</Text>
+                <Value>4</Value>
+                <ValueType>ReinfBendingRoller</ValueType>
+            </Parameter>
+
+            <Parameter>
+                <Name>side_ubars_side_cover</Name>
+                <Text>Otulina od boku</Text>
+                <Value>30</Value>
+                <ValueType>Length</ValueType>
+            </Parameter>
+            <Parameter>
+                <Name>side_ubars_top_cover</Name>
+                <Text>Otulina od góry</Text>
+                <Value>40</Value>
+                <ValueType>Length</ValueType>
+            </Parameter>
+            <Parameter>
+                <Name>side_ubars_bottom_cover</Name>
+                <Text>Otulina od dołu</Text>
+                <Value>30</Value>
+                <ValueType>Length</ValueType>
+            </Parameter>
+
+            <Parameter>
+                <Name>side_ubars_diameter</Name>
+                <Text>Średnica Ubarów</Text>
+                <Value>6</Value>
+                <ValueType>ReinfBarDiameter</ValueType>
+            </Parameter>
+            <Parameter>
+                <Name>side_ubars_spacing</Name>
+                <Text>Rozstaw Ubarów</Text>
+                <Value>150</Value>
+                <ValueType>double</ValueType>
+            </Parameter>
+            <Parameter>
+                <Name>side_ubars_ends_length</Name>
+                <Text>Długość ramion</Text>
+                <Value>100</Value>
+                <ValueType>double</ValueType>
+            </Parameter>
+
+        </Parameter>
     </Page>
 </Element>

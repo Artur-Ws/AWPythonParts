@@ -11,6 +11,8 @@ import StdReinfShapeBuilder.LinearBarPlacementBuilder as LinearBarBuilder
 import StdReinfShapeBuilder.GeneralReinfShapeBuilder as GeneralShapeBuilder
 import GeometryValidate as GeometryValidate
 from StdReinfShapeBuilder.RotationAngles import RotationAngles
+from StdReinfShapeBuilder.ReinforcementShapeProperties import ReinforcementShapeProperties
+from StdReinfShapeBuilder.ConcreteCoverProperties import ConcreteCoverProperties
 
 import math
 
@@ -49,11 +51,11 @@ class Slab():
         thickness = build_ele.Thickness.value
         length = build_ele.Length.value
         width = build_ele.Width.value
-        slab = AllplanGeo.Polyhedron3D.CreateCuboid(width, length, thickness)
+        balcony = AllplanGeo.Polyhedron3D.CreateCuboid(width, length, thickness)
 
-
-        slope = self.slope(build_ele, thickness, length, width)
-        err, balcony = AllplanGeo.MakeUnion(slab, slope)
+        if build_ele.sl_height.value > 0:
+            slope = self.slope(build_ele, thickness, length, width)
+            err, balcony = AllplanGeo.MakeUnion(balcony, slope)
 
         if build_ele.is_front.value == True:
             front_drip = self.drip_front(build_ele, width, length)
@@ -65,17 +67,18 @@ class Slab():
             err, balcony = AllplanGeo.MakeSubtraction(balcony, left_drip)
             err, balcony = AllplanGeo.MakeSubtraction(balcony, right_drip)
 
-        waterstop = self.waterstop(build_ele, width, length, thickness, build_ele.sl_height.value)
-
-        err, balcony = AllplanGeo.MakeUnion(balcony, waterstop)
+        if build_ele.ws_height.value > 0 and build_ele.ws_length.value > 0 and 4 < build_ele.ws_angle.value < 90:
+            waterstop = self.waterstop(build_ele, width, length, thickness, build_ele.sl_height.value)
+            err, balcony = AllplanGeo.MakeUnion(balcony, waterstop)
 
         com_prop = AllplanBaseElements.CommonProperties()
         com_prop.GetGlobalProperties()
         slab_obiect = AllplanBasisElements.ModelElement3D(com_prop, balcony)
         model_ele_list.append(slab_obiect)
 
-        self.bottom_mesh(build_ele,reinf_list)
+        self.bottom_mesh(build_ele, reinf_list)
         self.main_mesh(build_ele, reinf_list)
+        self.side_ubars(build_ele, reinf_list)
 
         views = [View2D3D (model_ele_list)]
 
@@ -231,6 +234,7 @@ class Slab():
         height = build_ele.Thickness.value + build_ele.sl_height.value
 
         # First Placement
+        addition = (build_ele.sl_height.value * (concrete_cover + s_diameter / 2 + 20)) / build_ele.Length.value  # difference between height at the start of placement and max height of slope
 
         shape_builder = AllplanReinf.ReinforcementShapeBuilder()
         shape_builder.AddPoints([(AllplanGeo.Point2D(0,0), concrete_cover),
@@ -249,21 +253,81 @@ class Slab():
                     LinearBarBuilder.StartEndPlacementRule.AdaptDistance, True))
 
 
-        # # Secondary Placement
-        #
-        # shape_builder = AllplanReinf.ReinforcementShapeBuilder()
-        # shape_builder.AddPoints([(AllplanGeo.Point2D(0,0), concrete_cover),
-        #                          (AllplanGeo.Point2D(build_ele.Width.value,0), concrete_cover), (concrete_cover)])
-        #
-        # shape = shape_builder.CreateShape(s_diameter, -1, steel_grade, -1, AllplanReinf.BendingShapeType.LongitudinalBar)
-        #
-        # start_point = AllplanGeo.Point3D(0, concrete_cover + s_diameter/2 + 20, height + build_ele.sl_height.value - s_diameter/2 - f_diameter - concrete_cover)
-        # end_point = AllplanGeo.Point3D(0, build_ele.Length.value - concrete_cover - s_diameter/2 - 20, height - s_diameter/2 - concrete_cover - f_diameter)
-        #
-        # reinf_list.append(LinearBarBuilder.create_linear_bar_placement_from_to_by_dist(1, shape, start_point, end_point,
-        #             concrete_cover, concrete_cover, build_ele.up_second_spacing.value,
-        #             LinearBarBuilder.StartEndPlacementRule.AdaptDistance, True))
-        #
+        # Secondary Placement
+
+        addition = (build_ele.sl_height.value * (concrete_cover + s_diameter/2 + 20))/build_ele.Length.value  #difference between height at the start of placement and max height of slope
+        add2 = f_diameter * build_ele.sl_height.value / build_ele.Length.value
+        shape_builder = AllplanReinf.ReinforcementShapeBuilder()
+        shape_builder.AddPoints([(AllplanGeo.Point2D(0,0), concrete_cover),
+                                 (AllplanGeo.Point2D(build_ele.Width.value,0), concrete_cover), (concrete_cover)])
+
+        shape = shape_builder.CreateShape(s_diameter, -1, steel_grade, -1, AllplanReinf.BendingShapeType.LongitudinalBar)
+
+        start_point = AllplanGeo.Point3D(0, concrete_cover + s_diameter/2 + 20, height - s_diameter/2 - f_diameter - concrete_cover - addition - add2)
+        end_point = AllplanGeo.Point3D(0, build_ele.Length.value - concrete_cover - s_diameter/2 - 20, build_ele.Thickness.value - s_diameter/2 - concrete_cover - f_diameter + addition - add2)
+
+        reinf_list.append(LinearBarBuilder.create_linear_bar_placement_from_to_by_dist(1, shape, start_point, end_point,
+                    concrete_cover, concrete_cover, build_ele.up_second_spacing.value,
+                    LinearBarBuilder.StartEndPlacementRule.AdaptDistance, True))
+
+    def side_ubars(self, build_ele, reinf_list):
+        top_cover             = build_ele.side_ubars_top_cover.value
+        bottom_cover          = build_ele.side_ubars_bottom_cover.value
+        side_cover            = build_ele.side_ubars_side_cover.value
+        steel_grade           = build_ele.side_ubars_SteelGrade.value
+        diameter              = build_ele.side_ubars_diameter.value
+        spacing               = build_ele.side_ubars_spacing.value
+        ends_length           = build_ele.side_ubars_ends_length.value
+        bending_roller        = build_ele.BendingRoller.value
+        count                 = 10
+        height                = build_ele.Thickness.value
+        height_with_slope     = build_ele.Thickness.value + build_ele.sl_height.value
+
+        concrete_cover_props = ConcreteCoverProperties.all(side_cover)
+
+        model_angles = RotationAngles(0, 90, 0)
+
+        shape_props = ReinforcementShapeProperties.rebar(diameter, bending_roller,
+                                                         steel_grade, -1,
+                                                         AllplanReinf.BendingShapeType.Stirrup)
+
+        #offset_cover_bottom = offset / height * concrete_cover
+
+        shape_higher = GeneralShapeBuilder.create_open_stirrup(height_with_slope - top_cover - bottom_cover,
+                                                               ends_length,
+                                                               model_angles,
+                                                               shape_props,
+                                                               concrete_cover_props)
+
+        shape_higher.Move(AllplanGeo.Vector3D(side_cover, side_cover, bottom_cover))
+
+        #offset_cover_top = offset / height * (height - concrete_cover)
+
+        shape_lower = GeneralShapeBuilder.create_stirrup(height - top_cover - bottom_cover,
+                                                         ends_length,
+                                                         model_angles,
+                                                         shape_props,
+                                                         concrete_cover_props)
+
+        shape_lower.Move(AllplanGeo.Vector3D(side_cover, build_ele.Length.value - side_cover, bottom_cover))
+
+        reinf_list.append(AllplanReinf.BarPlacement(1, count, shape_higher, shape_lower))
+        #self.model_ele_list.append(AllplanReinf.BarPlacement(1, count, shape_bottom, shape_top))
+
+    def front_ubars(self, build_ele, reinf_list):
+        concrete_cover = build_ele.up_ConcreteCover.value
+        steel_grade = build_ele.up_SteelGrade.value
+        diameter = build_ele.up_first_diameter.value
+
+    def back_ubars(self, build_ele, reinf_list):
+        concrete_cover = build_ele.up_ConcreteCover.value
+        steel_grade = build_ele.up_SteelGrade.value
+        diameter = build_ele.up_first_diameter.value
+
+    def outline_bars(self, build_ele, reinf_list):
+        concrete_cover = build_ele.up_ConcreteCover.value
+        steel_grade = build_ele.up_SteelGrade.value
+        diameter = build_ele.up_first_diameter.value
 
 ########################################################################################################################
 # window = tkinter.Tk()

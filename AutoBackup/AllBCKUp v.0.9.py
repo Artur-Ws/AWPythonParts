@@ -8,7 +8,7 @@ import time
 import datetime
 
 root = Tk()
-root.title('AllBCKUP')
+root.title('AutoBackup for Allplan')
 root.geometry('600x300')
 
 c = Canvas(root, height=500, width=1500)
@@ -61,9 +61,9 @@ def SourcePath():
     print(n.get())
 
 
-def GetFiles():
-    global FilesList
-    FilesList = [f for f in os.listdir(LoadPath) if os.path.isfile(os.path.join(LoadPath, f))]
+# def GetFiles():
+#     global FilesList
+#     FilesList = [f for f in os.listdir(LoadPath) if os.path.isfile(os.path.join(LoadPath, f))]
 
 
 def DoBackup():

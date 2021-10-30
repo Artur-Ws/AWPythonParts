@@ -39,7 +39,7 @@ class Slab():
     def create(self,build_ele):
         python_part = self.create_slab(build_ele)
 
-        return(python_part, self.handle_list)
+        return python_part, self.handle_list
 
 ### "Name" in .pyp file is reference to parameter when create an element
 
@@ -62,19 +62,23 @@ class Slab():
             slope = self.slope(build_ele, thickness, length, width)
             err, balcony = AllplanGeo.MakeUnion(balcony, slope)
 
-        if build_ele.is_front.value == True:
+        if build_ele.is_front.value:
             front_drip = self.drip_front(build_ele, width, length)
-            err, balcony = AllplanGeo.MakeSubtraction(balcony,front_drip)
+            err, balcony = AllplanGeo.MakeSubtraction(balcony, front_drip)
 
         left_drip, right_drip = self.drip_side(build_ele, width, length, mirror_plane)
 
-        if build_ele.is_side.value == True:
+        if build_ele.is_side.value:
             err, balcony = AllplanGeo.MakeSubtraction(balcony, left_drip)
             err, balcony = AllplanGeo.MakeSubtraction(balcony, right_drip)
 
         if build_ele.ws_height.value > 0 and build_ele.ws_length.value > 0 and 4 < build_ele.ws_angle.value < 90:
-            waterstop = self.waterstop(build_ele, width, length, thickness, build_ele.sl_height.value)
+            waterstop, recess = self.waterstop(build_ele, width, length, thickness, build_ele.sl_height.value)
             err, balcony = AllplanGeo.MakeUnion(balcony, waterstop)
+            if build_ele.is_waterstop_recess.value and build_ele.waterstop_recess_length.value > 0:
+                err, balcony = AllplanGeo.MakeSubtraction(balcony, recess)
+                slope = self.slope(build_ele, thickness, length, width)
+                err, balcony = AllplanGeo.MakeUnion(balcony, slope)
 
         com_prop = AllplanBaseElements.CommonProperties()
         com_prop.GetGlobalProperties()
@@ -120,28 +124,41 @@ class Slab():
 
     def waterstop(self, build_ele, slab_width, slab_length, slab_thickness, slope_height):
 
+        ### Main waterstop part
+
         ws_height = build_ele.ws_height.value
         ws_length = build_ele.ws_length.value
         ws_angle = build_ele.ws_angle.value
+        wsr_start = build_ele.waterstop_recess_start.value
+        wsr_length = build_ele.waterstop_recess_length.value
 
         r_angle = math.radians(ws_angle)
         ctg = 1 / math.tan(r_angle)
         ws_sl_length = (slope_height + ws_height) * ctg
 
-        ws_pol = AllplanGeo.Polygon3D()
-        ws_pol += AllplanGeo.Point3D(0, 0, slab_thickness + slope_height)
-        ws_pol += AllplanGeo.Point3D(0, 0, slab_thickness + slope_height + ws_height)
-        ws_pol += AllplanGeo.Point3D(0, ws_length, slab_thickness + slope_height + ws_height)
-        ws_pol += AllplanGeo.Point3D(0, ws_length + ws_sl_length, slab_thickness)
-        ws_pol += AllplanGeo.Point3D(0, 0, slab_thickness + slope_height)
+        def waterstop_with_offset(offset):
+            ws_pol = AllplanGeo.Polygon3D()
+            ws_pol += AllplanGeo.Point3D(offset, 0, slab_thickness + slope_height)
+            ws_pol += AllplanGeo.Point3D(offset, 0, slab_thickness + slope_height + ws_height)
+            ws_pol += AllplanGeo.Point3D(offset, ws_length, slab_thickness + slope_height + ws_height)
+            ws_pol += AllplanGeo.Point3D(offset, ws_length + ws_sl_length, slab_thickness)
+            ws_pol += AllplanGeo.Point3D(offset, 0, slab_thickness + slope_height)
+            return ws_pol
 
         ws_path = AllplanGeo.Polyline3D()
         ws_path += AllplanGeo.Point3D(0, 0, slab_thickness + slope_height)
         ws_path += AllplanGeo.Point3D(slab_width, 0, slab_thickness + slope_height)
 
-        err, waterstop = AllplanGeo.CreatePolyhedron(ws_pol, ws_path)
+        ### Waterstop recess part
 
-        return waterstop
+        wsr_path = AllplanGeo.Polyline3D()
+        wsr_path += AllplanGeo.Point3D(wsr_start, 0, 0)
+        wsr_path += AllplanGeo.Point3D(wsr_start + wsr_length, 0, 0)
+
+        err, waterstop = AllplanGeo.CreatePolyhedron(waterstop_with_offset(0), ws_path)
+        err, recess = AllplanGeo.CreatePolyhedron(waterstop_with_offset(wsr_start), wsr_path)
+
+        return waterstop, recess
 
     def drip_front(self, build_ele, width, length):
         drip_height = build_ele.drip_height.value

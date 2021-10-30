@@ -64,6 +64,26 @@
                 <Value>45</Value>
                 <ValueType>Length</ValueType>
             </Parameter>
+            <Parameter>
+                <Name>is_waterstop_recess</Name>
+                <Text>Wybranie w waterstopie</Text>
+                <Value>False</Value>
+                <ValueType>CheckBox</ValueType>
+            </Parameter>
+            <Parameter>
+                <Name>waterstop_recess_start</Name>
+                <Text>Początek wybrania</Text>
+                <Value>200</Value>
+                <Visible>is_waterstop_recess==True</Visible>
+                <ValueType>Length</ValueType>
+            </Parameter>
+            <Parameter>
+                <Name>waterstop_recess_length</Name>
+                <Text>Długość wybrania</Text>
+                <Value>700</Value>
+                <Visible>is_waterstop_recess==True</Visible>
+                <ValueType>Length</ValueType>
+            </Parameter>
         </Parameter>
 
         <Parameter>

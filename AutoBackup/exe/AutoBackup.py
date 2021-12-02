@@ -34,7 +34,7 @@ class Backup:
 
     def should_be_copied(self, file, interval):
         """ Return True if input file was edited since last backup, otherwise return false """
-        print("start")
+        #print("start")
         path = self.load_path
         factor = int(self.factor)
 
@@ -48,10 +48,12 @@ class Backup:
         file_mod_hour = str(datetime.datetime.fromtimestamp(os.path.getmtime(file_path)))[11:13]
         file_mod_minute = str(datetime.datetime.fromtimestamp(os.path.getmtime(file_path)))[14:16]
         file_mod_time_in_minutes = int(file_mod_hour) * 60 + int(file_mod_minute)
-        print('end')
+        #print('end')
         if file_mod_time_in_minutes > current_time_in_minutes - interval - factor and current_day == file_mod_day:
+            print(str(file) + "ACCEPTED")
             return True
         else:
+            #print(str(file) + "DENIED")
             return False
 
     def target_path(self):
@@ -88,6 +90,7 @@ class Backup:
         current_time = "h" + str(datetime.datetime.now())[11:13] + "m" + str(datetime.datetime.now())[14:16] + "_"
 
         GetFile = shutil.copy(file_path, save_path)
+        print(ndw_name)
         os.rename(save_path + "\\" + ndw_name,str(self.save_path + "\\" + day_folder + "\\" + ndw_name + "\\" + current_time + ndw_name))
 
     def main_process(self):
@@ -97,23 +100,24 @@ class Backup:
             file_list = [f for f in os.listdir(load_path) if os.path.isfile(os.path.join(load_path, f))]
 
             for f in file_list:
-                if self.interval == 'Wybierz interwał zapisu':
-                    print(str(f)[0:-3])
-                    return
+                if str(f)[-3:] == 'ndw':
+                    if self.interval == 'Wybierz interwał zapisu':
+                        print(str(f)[0:-3])
+                        return
 
-                else:
-                    if self.interval == '5 minut':
-                        if self.should_be_copied(f, 5):
-                            self.do_backup(f)
-                    elif self.interval == '15 minut':
-                        if self.should_be_copied(f, 15):
-                            self.do_backup(f)
-                    elif self.interval == '30 minut':
-                        if self.should_be_copied(f, 30):
-                            self.do_backup(f)
-                    elif self.interval == '1 godzina':
-                        if self.should_be_copied(f, 60):
-                            self.do_backup(f)
+                    else:
+                        if self.interval == '5 minut':
+                            if self.should_be_copied(f, 5):
+                                self.do_backup(f)
+                        elif self.interval == '15 minut':
+                            if self.should_be_copied(f, 15):
+                                self.do_backup(f)
+                        elif self.interval == '30 minut':
+                            if self.should_be_copied(f, 30):
+                                self.do_backup(f)
+                        elif self.interval == '1 godzina':
+                            if self.should_be_copied(f, 60):
+                                self.do_backup(f)
 
             if self.interval == '5 minut':
                 time.sleep(300)

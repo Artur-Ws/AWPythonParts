@@ -32,10 +32,12 @@ class Backup:
     def search_file(self):
         pass
 
-    def should_be_copied(self, file, interval):
-        """ Return True if input file was edited since last backup, otherwise return false """
-        print("start")
-        path = self.load_path
+    def should_be_copied(self, file, interval, project):
+        """
+        Return True if input file was edited since last backup, otherwise return false
+        """
+        print("checking file...")
+        path = self.load_path + "\\" + project
         factor = int(self.factor)
 
         file_path = str(path + "\\" + file)
@@ -48,14 +50,18 @@ class Backup:
         file_mod_hour = str(datetime.datetime.fromtimestamp(os.path.getmtime(file_path)))[11:13]
         file_mod_minute = str(datetime.datetime.fromtimestamp(os.path.getmtime(file_path)))[14:16]
         file_mod_time_in_minutes = int(file_mod_hour) * 60 + int(file_mod_minute)
-        print('end')
+
         if file_mod_time_in_minutes > current_time_in_minutes - interval - factor and current_day == file_mod_day:
+            print('allowed')
             return True
         else:
+            print('rejected')
             return False
 
     def target_path(self):
-        """ Open choose save directory dialog window, return save path """
+        """
+        Open choose save directory dialog window, return save path
+        """
 
         file_path = filedialog.askdirectory()
         save_path = str(file_path)
@@ -67,7 +73,9 @@ class Backup:
         self.save_path = save_path
 
     def source_path(self):
-        """ Open choose save directory dialog window, return save path """
+        """
+        Open choose save directory dialog window, return save path
+        """
 
         load_path = filedialog.askdirectory()
 
@@ -77,12 +85,12 @@ class Backup:
 
         self.load_path = load_path
 
-    def do_backup(self, ndw_file):
+    def do_backup(self, ndw_file, project_name):
         day_folder = str(datetime.datetime.now())[0:10]
         ndw_name = str(ndw_file)
-        file_path = str(self.load_path + "\\" + ndw_name)
+        file_path = str(self.load_path + "\\" + project_name + "\\" + ndw_name)
 
-        save_path = str(self.save_path + "\\" + day_folder + "\\" + ndw_name)
+        save_path = str(self.save_path + "\\" + project_name +"\\" + day_folder + "\\" + ndw_name)
         if not os.path.exists(save_path):
             new_directory = str(os.makedirs(save_path))
         current_time = "h" + str(datetime.datetime.now())[11:13] + "m" + str(datetime.datetime.now())[14:16] + "_"
@@ -94,26 +102,35 @@ class Backup:
 
         load_path = self.load_path
         while True:
-            file_list = [f for f in os.listdir(load_path) if os.path.isfile(os.path.join(load_path, f))]
+            dir_list = [f for f in os.listdir(load_path)]
+            project_dir_list = []
+            for file in dir_list:
+                self.get_only_projects(file, project_dir_list)
 
-            for f in file_list:
-                if self.interval == 'Wybierz interwał zapisu':
-                    print(str(f)[0:-3])
-                    return
+            for project in project_dir_list:
+                project_load_path = load_path + "\\" + project
 
-                else:
-                    if self.interval == '5 minut':
-                        if self.should_be_copied(f, 5):
-                            self.do_backup(f)
-                    elif self.interval == '15 minut':
-                        if self.should_be_copied(f, 15):
-                            self.do_backup(f)
-                    elif self.interval == '30 minut':
-                        if self.should_be_copied(f, 30):
-                            self.do_backup(f)
-                    elif self.interval == '1 godzina':
-                        if self.should_be_copied(f, 60):
-                            self.do_backup(f)
+                file_list = [f for f in os.listdir(project_load_path) if os.path.isfile(os.path.join(project_load_path, f))]
+
+                for f in file_list:
+                    if str(f)[0:-3]
+                        if self.interval == 'Wybierz interwał zapisu':
+                            print(str(f)[0:-3])
+                            return
+
+                        else:
+                            if self.interval == '5 minut':
+                                if self.should_be_copied(f, 5, project):
+                                    self.do_backup(f, project)
+                            elif self.interval == '15 minut':
+                                if self.should_be_copied(f, 15, project):
+                                    self.do_backup(f, project)
+                            elif self.interval == '30 minut':
+                                if self.should_be_copied(f, 30, project):
+                                    self.do_backup(f, project, project)
+                            elif self.interval == '1 godzina':
+                                if self.should_be_copied(f, 60, project):
+                                    self.do_backup(f, project)
 
             if self.interval == '5 minut':
                 time.sleep(300)
@@ -126,6 +143,17 @@ class Backup:
             else:
                 break
 
+
+    def get_only_projects(self, file, project_dir_list):
+        """
+        Checks whether given file is a project directory, if it is, appends it to project_dir_list
+        """
+        try:
+            x = int(file[0:4])
+            project_dir_list.append(file)
+        except:
+            print("cant do that")
+            x = file[0:4]
 
     def graphic_interface(self):
 
@@ -140,10 +168,6 @@ class Backup:
         # Adding combobox drop down list
         delay['values'] = ('Wybierz interwał zapisu', '5 minut', '15 minut', '30 minut', '1 godzina')
         delay.current(0)
-
-        target_path = Button(c, text='Dokąd kopiować?', font='calibri', border=5, command=self.target_path)
-        target_path.place(relwidth=1, relheight=0.2, rely=0.4)
-
 
         target_path = Button(c, text='Dokąd kopiować?', font='calibri', border=5, command=self.target_path)
         target_path.place(relwidth=1, relheight=0.2, rely=0.4)

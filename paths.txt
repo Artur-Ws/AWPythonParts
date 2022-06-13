@@ -1,0 +1,3 @@
+C:\Dane/Allplan\Allplan 2021\Std\Library\Folder z plikami pyp      #Ścieżka, gdzie wrzucam plik .pyp
+C:\ProgramData\Nemetschek\Allplan\2021\ETC\PythonPartsScripts\AWPythonParts     #Ścieżka, gdzie wrzucam plik .py
+https://pythonparts.allplan.com/
